@@ -1,5 +1,8 @@
 import { useMemo } from "react";
 import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { createLogger } from "redux-logger";
 import { createEpicMiddleware } from "redux-observable";
 import { rootEpic } from "./epics";
@@ -34,12 +37,24 @@ function reducer(state = INITIAL_STATE, { type, payload }) {
   }
 }
 
+const persistConfig = {
+  key: "primary",
+  storage,
+  whitelist: ["character"], // place to select which state you want to persist
+};
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
 const initStore = (initialState) => {
   const epicMiddleware = createEpicMiddleware();
   const logger = createLogger({ collapsed: true }); // log every action to see what's happening behind the scenes.
   const reduxMiddleware = applyMiddleware(epicMiddleware, logger);
 
-  const store = createStore(reducer, initialState, reduxMiddleware);
+  const store = createStore(
+    persistedReducer,
+    initialState,
+    composeWithDevTools(reduxMiddleware)
+  );
   epicMiddleware.run(rootEpic);
 
   return store;

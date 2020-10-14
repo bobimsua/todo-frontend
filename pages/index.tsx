@@ -11,8 +11,12 @@ export default function Home({ allPostsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <Link href={`/counter`}>Counter</Link>
-      <Link href={`/antd`}>Counter</Link>
+      <div>
+        <Link href={`/counter`}>Counter</Link>
+      </div>
+      <div>
+        <Link href={`/antd`}>Antd</Link>
+      </div>
       <section className={utilStyles.headingMd}>…</section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
